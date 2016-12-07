@@ -1,3 +1,4 @@
+const helpers = require('./lib/helpers');
 const topojson = require('topojson');
 const topo = require('./data/congress-115-states.json'); // source: https://github.com/bradoyler/atlas-make/tree/master/us-congress-census
 const fs = require('fs');
@@ -52,19 +53,19 @@ var svg = d3n.createSVG()
 var data = d3.csvParse(csvString);
 
 svg.append('defs').append('path')
-      .attr('id', 'land')
-      .datum(topojson.feature(topo, topo.objects.states))
-      .attr('d', path);
+    .attr('id', 'land')
+    .datum(topojson.feature(topo, topo.objects.states))
+    .attr('d', path);
 
 svg.append('clipPath')
-   .attr('id', 'clip-land')
-   .append('use')
-   .attr('xlink:href', '#land');
+    .attr('id', 'clip-land')
+    .append('use')
+    .attr('xlink:href', '#land');
 
 svg.append('g')
     .attr('class', 'districts')
     .attr('clip-path', 'url(#clip-land)')
-  .selectAll('path')
+    .selectAll('path')
     .data(topojson.feature(topo, topo.objects.districts).features)
     .enter().append('path')
     .attr('d', path)
@@ -90,6 +91,10 @@ svg.append('path')
     .attr('class', 'state-boundaries')
     .datum(topojson.mesh(topo, topo.objects.states, function(a, b) { return a !== b; }))
     .attr('d', path);
+
+// reduce precision of coordinates for smaller asset
+svg.selectAll('path')
+    .each(helpers.eachGeoQuantize);
 
 // create output files
 require('./lib/output')('map-congress-unopposed', d3n);
