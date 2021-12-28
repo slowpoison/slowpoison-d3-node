@@ -128,6 +128,11 @@ describe('createSVG (w/ width & viewBox)', function () {
 })
 
 describe('svgString() should retain camel-casing', function () {
+  var d3nEmpty = new D3Node()
+  it('should return an empty string when no SVGs are present', function () {
+    assert.deepEqual(d3nEmpty.svgString(), '')
+  })
+
   var d3n = new D3Node()
   d3n.createSVG()
     .attr('preserveAspectRatio', 'true')
@@ -139,6 +144,27 @@ describe('svgString() should retain camel-casing', function () {
 
   it('should return html (w/o casing)', function () {
     assert.equal(d3n.html(), '<html><head></head><body><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="true"><radialgradient offset="0%"></radialgradient></svg></body></html>')
+  })
+})
+
+describe('svgStrings()', function() {
+  var d3nEmpty = new D3Node()
+  it('should return an empty array when no SVGs are present', function () {
+    assert.deepEqual(d3nEmpty.svgStrings(), [])
+  })
+
+  var d3n = new D3Node()
+  // create two SVGs
+  d3n.createSVG()
+    .attr('preserveAspectRatio', 'true')
+    .append('radialGradient').attr('offset', '0%')
+  d3n.createSVG()
+    .attr('preserveAspectRatio', 'true')
+    .append('radialGradient').attr('offset', '0%')
+
+  it('should return an array of svg strings', function () {
+    assert.deepEqual(d3n.svgStrings(), ['<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="true"><radialGradient offset="0%"></radialGradient></svg>',
+        '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="true"><radialGradient offset="0%"></radialGradient></svg>'])
   })
 })
 

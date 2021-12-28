@@ -3,3 +3,4 @@ node_modules/*
 npm-debug.log
 examples/dist/*.html
 examples/dist/*.png
+*.swp

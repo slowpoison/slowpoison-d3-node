@@ -102,6 +102,15 @@ D3Node.prototype.svgString = function () {
   return ''
 }
 
+D3Node.prototype.svgStrings = function () {
+  if (this.d3Element.select('svg').node()) {
+    return this.d3Element.selectAll('svg')
+      .nodes()
+      .map(n => fixXmlCase(n.outerHTML))
+  }
+  return []
+}
+
 D3Node.prototype.html = function () {
   return jsDom.serializeDocument(this.document)
 }
